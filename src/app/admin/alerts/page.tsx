@@ -103,7 +103,7 @@ export default function AlertsPage() {
                     <span className={`font-medium ${log.isError ? "text-red-600" : "text-gray-700"}`}>
                       {TRIGGER_LABELS[log.trigger] ?? log.trigger}
                     </span>
-                    <span className="text-gray-400">{new Date(log.sentAt).toLocaleDateString("en-AU")}</span>
+                    <span className="text-gray-400">{new Date(log.sentAt).toLocaleDateString("en-US")}</span>
                   </div>
                   <p className="text-gray-500 truncate">{log.recipient}</p>
                   {log.isError && <p className="text-red-500">Failed</p>}

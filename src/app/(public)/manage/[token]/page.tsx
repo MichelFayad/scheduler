@@ -111,7 +111,7 @@ export default function ManageBookingPage({ params }: { params: Promise<{ token:
     }
   }
 
-  const formatDate = (ds: string) => new Date(ds).toLocaleDateString("en-AU", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+  const formatDate = (ds: string) => new Date(ds).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
 
   if (loading) {
     return (

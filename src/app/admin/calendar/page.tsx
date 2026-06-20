@@ -45,7 +45,7 @@ export default async function CalendarPage({
     byDate[ds].push(b);
   }
 
-  const monthLabel = firstOfMonth.toLocaleString("en-AU", { month: "long", year: "numeric", timeZone: "UTC" });
+  const monthLabel = firstOfMonth.toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 
   function nav(dy: number) {
     let m = month + dy;

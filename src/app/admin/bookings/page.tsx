@@ -148,7 +148,7 @@ export default async function BookingsPage({
                   <td className="px-4 py-3 text-gray-600">{b.community.name}</td>
                   <td className="px-4 py-3 text-gray-600 max-w-[180px] truncate">{b.propertyAddress}</td>
                   <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
-                    {new Date(b.scheduledDate).toLocaleDateString("en-AU", { timeZone: "UTC" })}
+                    {new Date(b.scheduledDate).toLocaleDateString("en-US", { timeZone: "UTC" })}
                   </td>
                   <td className="px-4 py-3 text-gray-600">{b.scheduledTime}</td>
                   <td className="px-4 py-3"><StatusBadge status={b.status} /></td>

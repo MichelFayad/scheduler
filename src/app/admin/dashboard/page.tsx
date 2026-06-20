@@ -50,7 +50,7 @@ export default async function DashboardPage() {
   const { todayBookings, weekBookings, totalActive, recentBookings, totalCommunities } =
     await getDashboardData();
 
-  const todayLabel = new Date().toLocaleDateString("en-AU", {
+  const todayLabel = new Date().toLocaleDateString("en-US", {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   });
 
@@ -116,7 +116,7 @@ export default async function DashboardPage() {
                         <StatusBadge status={b.status} />
                       </div>
                       <p className="text-xs text-gray-500 truncate">
-                        {b.community.name} - {new Date(b.scheduledDate).toLocaleDateString("en-AU", { timeZone: "UTC" })} at {b.scheduledTime}
+                        {b.community.name} - {new Date(b.scheduledDate).toLocaleDateString("en-US", { timeZone: "UTC" })} at {b.scheduledTime}
                       </p>
                     </div>
                     <span className="ml-3 text-xs font-mono text-gray-400 flex-shrink-0">{b.referenceNumber}</span>

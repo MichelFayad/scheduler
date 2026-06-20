@@ -24,7 +24,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-COMPOSE="docker compose -f docker-compose.prod.yml"
+COMPOSE="docker compose --env-file .env.production -f docker-compose.prod.yml"
 SEED=false
 PULL=true
 BRANCH=""

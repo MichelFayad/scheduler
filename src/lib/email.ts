@@ -68,7 +68,7 @@ async function sendAndLog({
 
 function formatDateTime(date: Date | string, time: string) {
   const d = typeof date === "string" ? new Date(date) : date;
-  return `${d.toLocaleDateString("en-AU", { weekday: "long", year: "numeric", month: "long", day: "numeric" })} at ${time}`;
+  return `${d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })} at ${time}`;
 }
 
 function bookingTable(b: {
@@ -302,7 +302,7 @@ export async function sendReminderEmail({
 
   await sendAndLog({
     to: booking.email,
-    subject: `Reminder: Inspection Tomorrow – ${booking.referenceNumber}`,
+    subject: `Reminder: Upcoming Inspection – ${booking.referenceNumber}`,
     html: `
       <p>Hi ${booking.firstName},</p>
       <p>This is a reminder about your upcoming inspection:</p>

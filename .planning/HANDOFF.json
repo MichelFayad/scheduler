@@ -1,8 +1,8 @@
 {
   "version": "1.0",
-  "timestamp": "2026-06-20T11:16:41.687Z",
-  "source": "auto-postool",
-  "partial": true,
+  "timestamp": "2026-06-20T11:27:33.315Z",
+  "source": "auto-compact",
+  "partial": false,
   "phase": null,
   "phase_name": null,
   "phase_dir": null,
@@ -15,7 +15,60 @@
   "blockers": [],
   "human_actions_pending": [],
   "decisions": [],
-  "uncommitted_files": [],
+  "uncommitted_files": [
+    {
+      "status": "M",
+      "path": ".planning/HANDOFF.json"
+    },
+    {
+      "status": "M",
+      "path": "prisma/seed.ts"
+    },
+    {
+      "status": "M",
+      "path": "src/app/(public)/confirmation/page.tsx"
+    },
+    {
+      "status": "M",
+      "path": "src/app/(public)/manage/[token]/page.tsx"
+    },
+    {
+      "status": "M",
+      "path": "src/app/(public)/schedule/page.tsx"
+    },
+    {
+      "status": "M",
+      "path": "src/app/admin/alerts/page.tsx"
+    },
+    {
+      "status": "M",
+      "path": "src/app/admin/bookings/[id]/page.tsx"
+    },
+    {
+      "status": "M",
+      "path": "src/app/admin/bookings/page.tsx"
+    },
+    {
+      "status": "M",
+      "path": "src/app/admin/calendar/page.tsx"
+    },
+    {
+      "status": "M",
+      "path": "src/app/admin/communities/[id]/page.tsx"
+    },
+    {
+      "status": "M",
+      "path": "src/app/admin/dashboard/page.tsx"
+    },
+    {
+      "status": "M",
+      "path": "src/app/admin/reports/page.tsx"
+    },
+    {
+      "status": "M",
+      "path": "src/lib/email.ts"
+    }
+  ],
   "next_action": null,
-  "context_notes": ""
+  "context_notes": "Recent commits:\n13669a2 Initial commit"
 }

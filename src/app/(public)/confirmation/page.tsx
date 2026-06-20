@@ -20,7 +20,7 @@ async function ConfirmationContent({ bookingRef }: { bookingRef: string }) {
     );
   }
 
-  const dateLabel = new Date(booking.scheduledDate).toLocaleDateString("en-AU", {
+  const dateLabel = new Date(booking.scheduledDate).toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
     month: "long",

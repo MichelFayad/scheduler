@@ -22,8 +22,10 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Seeding database…");
 
-  // Super admin
-  const passwordHash = await bcrypt.hash("admin123", 12);
+  // Super admin. Password comes from SEED_ADMIN_PASSWORD so deployed/test
+  // environments don't ship a known default; falls back to a dev-only value.
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? "admin123";
+  const passwordHash = await bcrypt.hash(adminPassword, 12);
   const admin = await prisma.adminUser.upsert({
     where: { email: "admin@scheduler.local" },
     update: {},
@@ -34,7 +36,7 @@ async function main() {
       role: "SUPER_ADMIN",
     },
   });
-  console.log(`✅ Admin created: ${admin.email} (password: admin123)`);
+  console.log(`✅ Admin created: ${admin.email} (password: ${adminPassword})`);
 
   // Sample community
   const community = await prisma.community.upsert({

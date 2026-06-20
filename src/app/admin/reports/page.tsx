@@ -129,7 +129,7 @@ export default async function ReportsPage() {
                 {recentByDay.map((row) => {
                   const maxCount = Math.max(...recentByDay.map((r) => r._count.id));
                   const pct = maxCount > 0 ? (row._count.id / maxCount) * 100 : 0;
-                  const dateLabel = new Date(row.scheduledDate).toLocaleDateString("en-AU", { month: "short", day: "numeric", timeZone: "UTC" });
+                  const dateLabel = new Date(row.scheduledDate).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
                   return (
                     <div key={row.scheduledDate.toISOString()} className="flex items-center gap-3 text-xs">
                       <span className="w-14 text-gray-400 flex-shrink-0">{dateLabel}</span>

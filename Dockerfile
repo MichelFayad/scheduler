@@ -17,6 +17,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-cert
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npx prisma generate
+
+# NEXT_PUBLIC_* vars are inlined into the browser bundle at build time, so they
+# must be present now (passed as build args from compose). Server-only vars are
+# read at runtime, so a dummy RESEND_API_KEY just satisfies the email client's
+# constructor during build-time page-data collection — the real key is injected
+# at runtime via env_file and never baked into the image.
+ARG NEXT_PUBLIC_APP_URL
+ARG NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=$NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+ENV RESEND_API_KEY=re_build_placeholder
 RUN npm run build
 
 # ---------- runner ----------

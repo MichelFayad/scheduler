@@ -132,7 +132,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
 
   if (!booking) return <div className="p-8 text-sm text-gray-400">Loading...</div>;
 
-  const dateLabel = new Date(booking.scheduledDate).toLocaleDateString("en-AU", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+  const dateLabel = new Date(booking.scheduledDate).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
   const canAct = ["CONFIRMED", "RESCHEDULED"].includes(booking.status);
   const editInput = "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500";
 
@@ -206,7 +206,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
             { label: "Property", value: booking.propertyAddress },
             { label: "Inspection", value: booking.inspectionDescription },
             { label: "Notes", value: booking.notes ?? "-" },
-            { label: "Booked on", value: new Date(booking.createdAt).toLocaleString("en-AU") },
+            { label: "Booked on", value: new Date(booking.createdAt).toLocaleString("en-US") },
           ].map(({ label, value }) => (
             <div key={label}>
               <p className="text-xs text-gray-400">{label}</p>
@@ -285,7 +285,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                   <span className={`font-medium ${log.isError ? "text-red-600" : "text-gray-700"}`}>{log.trigger.replace(/_/g, " ")}</span>
                   <span className="text-gray-400 ml-2">to {log.recipient}</span>
                 </div>
-                <span className="text-gray-400">{new Date(log.sentAt).toLocaleString("en-AU")}</span>
+                <span className="text-gray-400">{new Date(log.sentAt).toLocaleString("en-US")}</span>
               </li>
             ))}
           </ul>

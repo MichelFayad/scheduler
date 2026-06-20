@@ -34,7 +34,7 @@ function Calendar({
 }) {
   const firstDay = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
   const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
-  const monthLabel = new Date(Date.UTC(year, month - 1, 1)).toLocaleString("en-AU", {
+  const monthLabel = new Date(Date.UTC(year, month - 1, 1)).toLocaleString("en-US", {
     month: "long",
     year: "numeric",
   });

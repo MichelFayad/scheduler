@@ -283,7 +283,7 @@ export default function EditCommunityPage({ params }: { params: Promise<{ id: st
         ) : (
           <ul className="space-y-2 mb-4">
             {overrides.map((o) => {
-              const dateLabel = new Date(o.date).toLocaleDateString("en-AU", { weekday: "short", year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+              const dateLabel = new Date(o.date).toLocaleDateString("en-US", { weekday: "short", year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
               return (
                 <li key={o.id} className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2 text-sm">
                   <span className="text-gray-700">
