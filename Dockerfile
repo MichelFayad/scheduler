@@ -43,11 +43,11 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
-# Prisma CLI + engines + migrations, so the entrypoint can run migrate deploy
-COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+# Full node_modules + prisma schema/migrations so the entrypoint can run
+# `prisma migrate deploy` reliably at startup. The Next.js standalone output
+# trims node_modules too aggressively for the Prisma CLI (it needs companion
+# .wasm files), so we copy the complete set over it.
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/prisma ./prisma
 
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
