@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
+// Render per-request: this page shows live data and lives inside the
+// session-gated admin shell, so it must never be statically cached.
+export const dynamic = "force-dynamic";
+
 async function getDashboardData() {
   const now = new Date();
   const todayUTC = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
