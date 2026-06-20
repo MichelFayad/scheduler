@@ -1,6 +1,10 @@
 import { auth } from "@/auth";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
+// Always render per-request so the session (and therefore the sidebar) is
+// evaluated live instead of served from a cached, session-less render.
+export const dynamic = "force-dynamic";
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
 
