@@ -12,8 +12,8 @@ async function ConfirmationContent({ bookingRef }: { bookingRef: string }) {
   if (!booking) {
     return (
       <div className="text-center">
-        <p className="text-gray-500">Booking not found.</p>
-        <Link href="/schedule" className="mt-4 inline-block text-blue-600 hover:underline text-sm">
+        <p className="text-slate-500">Booking not found.</p>
+        <Link href="/schedule" className="mt-4 inline-block text-brand-600 hover:underline text-sm">
           Make a new booking
         </Link>
       </div>
@@ -44,12 +44,12 @@ async function ConfirmationContent({ bookingRef }: { bookingRef: string }) {
       </div>
 
       {/* Booking details */}
-      <div className="mt-6 bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <span className="text-sm text-gray-500">Booking reference</span>
-          <span className="font-mono font-bold text-gray-900">{booking.referenceNumber}</span>
+      <div className="mt-6 card overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+          <span className="text-sm text-slate-500">Booking reference</span>
+          <span className="font-mono font-bold text-slate-900">{booking.referenceNumber}</span>
         </div>
-        <dl className="divide-y divide-gray-100">
+        <dl className="divide-y divide-slate-100">
           {[
             { label: "Community", value: booking.community.name },
             { label: "Name", value: `${booking.firstName} ${booking.lastName}` },
@@ -59,20 +59,20 @@ async function ConfirmationContent({ bookingRef }: { bookingRef: string }) {
             { label: "Inspection", value: booking.inspectionDescription },
           ].map(({ label, value }) => (
             <div key={label} className="px-6 py-3 flex gap-4">
-              <dt className="w-28 flex-shrink-0 text-sm text-gray-500">{label}</dt>
-              <dd className="text-sm text-gray-900">{value}</dd>
+              <dt className="w-28 flex-shrink-0 text-sm text-slate-500">{label}</dt>
+              <dd className="text-sm text-slate-900">{value}</dd>
             </div>
           ))}
         </dl>
       </div>
 
-      <div className="mt-6 bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-800">
+      <div className="mt-6 bg-brand-50 border border-brand-100 rounded-xl p-4 text-sm text-brand-800">
         <strong>Need to change your booking?</strong> Use the link in your confirmation email to
         cancel or reschedule — no login required.
       </div>
 
       <div className="mt-6 text-center">
-        <Link href="/" className="text-sm text-gray-500 hover:text-gray-700">
+        <Link href="/" className="text-sm text-slate-500 hover:text-slate-700">
           ← Back to home
         </Link>
       </div>
@@ -88,16 +88,19 @@ export default async function ConfirmationPage({
   const { ref } = await searchParams;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-100">
+    <div className="min-h-screen bg-slate-50">
+      <header className="bg-white border-b border-slate-200/70">
         <div className="max-w-2xl mx-auto px-6 h-16 flex items-center">
-          <Link href="/" className="font-semibold text-lg tracking-tight text-gray-900">
+          <Link href="/" className="flex items-center gap-2 font-semibold text-lg tracking-tight text-slate-900">
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-brand-600 text-white text-sm font-bold">
+              S
+            </span>
             Scheduler
           </Link>
         </div>
       </header>
       <main className="max-w-2xl mx-auto px-6 py-10">
-        <Suspense fallback={<p className="text-center text-gray-400">Loading…</p>}>
+        <Suspense fallback={<p className="text-center text-slate-400">Loading…</p>}>
           <ConfirmationContent bookingRef={ref ?? ""} />
         </Suspense>
       </main>

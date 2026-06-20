@@ -58,17 +58,17 @@ function Calendar({
   }
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4">
+    <div className="border border-slate-200 rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
-        <button onClick={prevMonth} className="p-1 rounded hover:bg-gray-100 text-gray-600">
+        <button onClick={prevMonth} className="grid h-8 w-8 place-items-center rounded-lg hover:bg-slate-100 text-slate-600">
           ←
         </button>
-        <span className="font-medium text-sm text-gray-800">{monthLabel}</span>
-        <button onClick={nextMonth} className="p-1 rounded hover:bg-gray-100 text-gray-600">
+        <span className="font-semibold text-sm text-slate-800">{monthLabel}</span>
+        <button onClick={nextMonth} className="grid h-8 w-8 place-items-center rounded-lg hover:bg-slate-100 text-slate-600">
           →
         </button>
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-1">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-slate-400 mb-1">
         {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
           <div key={d}>{d}</div>
         ))}
@@ -87,12 +87,12 @@ function Calendar({
               disabled={!isAvailable || isPast}
               onClick={() => onSelect(ds)}
               className={[
-                "h-9 w-full rounded text-sm font-medium transition-colors",
+                "h-9 w-full rounded-lg text-sm font-medium transition-colors",
                 isSelected
-                  ? "bg-blue-600 text-white"
+                  ? "bg-brand-600 text-white shadow-sm"
                   : isAvailable && !isPast
-                  ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
-                  : "text-gray-300 cursor-not-allowed",
+                  ? "bg-brand-50 text-brand-700 hover:bg-brand-100"
+                  : "text-slate-300 cursor-not-allowed",
               ].join(" ")}
             >
               {day}
@@ -118,7 +118,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="label">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       {children}
@@ -127,8 +127,7 @@ function Field({
   );
 }
 
-const inputClass =
-  "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent";
+const inputClass = "input";
 
 export default function SchedulePage() {
   const router = useRouter();
@@ -257,19 +256,22 @@ export default function SchedulePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {/* Nav */}
-      <header className="bg-white border-b border-gray-100">
+      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur border-b border-slate-200/70">
         <div className="max-w-2xl mx-auto px-6 h-16 flex items-center">
-          <Link href="/" className="font-semibold text-lg tracking-tight text-gray-900">
+          <Link href="/" className="flex items-center gap-2 font-semibold text-lg tracking-tight text-slate-900">
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-brand-600 text-white text-sm font-bold">
+              S
+            </span>
             Scheduler
           </Link>
         </div>
       </header>
 
       <main className="max-w-2xl mx-auto px-6 py-10">
-        <h1 className="text-2xl font-bold text-gray-900">Schedule an Inspection</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Schedule an Inspection</h1>
+        <p className="mt-1 text-sm text-slate-500">
           No account required. You&apos;ll receive a confirmation email with a management link.
         </p>
 
@@ -287,8 +289,8 @@ export default function SchedulePage() {
           />
 
           {/* Community */}
-          <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-            <h2 className="font-semibold text-gray-800">Community</h2>
+          <section className="card p-6 space-y-4">
+            <h2 className="font-semibold text-slate-800">Community</h2>
             <Field label="Select your community" required error={errors.community}>
               <select
                 value={selectedCommunity}
@@ -305,8 +307,8 @@ export default function SchedulePage() {
 
           {/* Date & Time */}
           {selectedCommunity && (
-            <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-              <h2 className="font-semibold text-gray-800">Date &amp; Time</h2>
+            <section className="card p-6 space-y-4">
+              <h2 className="font-semibold text-slate-800">Date &amp; Time</h2>
               {loadingDates ? (
                 <p className="text-sm text-gray-400">Loading available dates…</p>
               ) : (
@@ -323,11 +325,11 @@ export default function SchedulePage() {
 
               {selectedDate && (
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-2">Available times</p>
+                  <p className="text-sm font-medium text-slate-700 mb-2">Available times</p>
                   {loadingSlots ? (
-                    <p className="text-sm text-gray-400">Loading…</p>
+                    <p className="text-sm text-slate-400">Loading…</p>
                   ) : timeSlots.length === 0 ? (
-                    <p className="text-sm text-gray-400">No slots available on this date.</p>
+                    <p className="text-sm text-slate-400">No slots available on this date.</p>
                   ) : (
                     <div className="flex flex-wrap gap-2">
                       {timeSlots.map((s) => (
@@ -338,8 +340,8 @@ export default function SchedulePage() {
                           className={[
                             "px-4 py-2 rounded-lg text-sm font-medium border transition-colors",
                             selectedTime === s.time
-                              ? "bg-blue-600 text-white border-blue-600"
-                              : "border-gray-200 text-gray-700 hover:border-blue-400",
+                              ? "bg-brand-600 text-white border-brand-600 shadow-sm"
+                              : "border-slate-200 text-slate-700 hover:border-brand-400 hover:text-brand-700",
                           ].join(" ")}
                         >
                           {s.time}
@@ -354,8 +356,8 @@ export default function SchedulePage() {
           )}
 
           {/* Personal details */}
-          <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-            <h2 className="font-semibold text-gray-800">Your Details</h2>
+          <section className="card p-6 space-y-4">
+            <h2 className="font-semibold text-slate-800">Your Details</h2>
             <div className="grid grid-cols-2 gap-4">
               <Field label="First name" required error={errors.firstName}>
                 <input
@@ -401,8 +403,8 @@ export default function SchedulePage() {
           </section>
 
           {/* Inspection details */}
-          <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-            <h2 className="font-semibold text-gray-800">Inspection Details</h2>
+          <section className="card p-6 space-y-4">
+            <h2 className="font-semibold text-slate-800">Inspection Details</h2>
             <Field
               label="Describe the nature of your inspection"
               required
@@ -433,9 +435,9 @@ export default function SchedulePage() {
                 type="checkbox"
                 checked={form.consent}
                 onChange={(e) => setForm({ ...form, consent: e.target.checked })}
-                className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600"
+                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
               />
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-slate-600">
                 I agree to the inspection terms and understand that my booking details will be
                 shared with the community administrator.
               </span>
@@ -448,11 +450,7 @@ export default function SchedulePage() {
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
+            <button type="submit" disabled={submitting} className="btn-primary w-full py-3 text-base">
               {submitting ? "Submitting…" : "Confirm Booking"}
             </button>
           </div>
