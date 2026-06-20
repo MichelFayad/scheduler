@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/admin/dashboard";
 
@@ -30,7 +29,9 @@ function LoginForm() {
       setError("Invalid email or password.");
       setLoading(false);
     } else {
-      router.push(callbackUrl);
+      // Full-page load (not a soft navigation) so the shared /admin layout
+      // re-renders server-side with the new session and shows the sidebar.
+      window.location.href = callbackUrl;
     }
   }
 

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import CommunityFilter from "@/components/admin/CommunityFilter";
 
 export const dynamic = "force-dynamic";
 
@@ -70,19 +71,16 @@ export default async function CalendarPage({
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-xl font-bold text-gray-900">Calendar</h1>
         <div className="flex items-center gap-3">
-          <form method="GET" action="/admin/calendar" className="flex gap-2">
-            <input type="hidden" name="year" value={year} />
-            <input type="hidden" name="month" value={month} />
-            <select name="community" defaultValue={communityId} onChange={(e) => e.currentTarget.form?.submit()}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="">All communities</option>
-              {communities.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-          </form>
+          <CommunityFilter
+            communities={communities}
+            year={year}
+            month={month}
+            communityId={communityId}
+          />
           <div className="flex items-center gap-1">
-            <Link href={nav(-1)} className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">←</Link>
-            <span className="px-4 text-sm font-medium text-gray-700 whitespace-nowrap">{monthLabel}</span>
-            <Link href={nav(1)} className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">→</Link>
+            <Link href={nav(-1)} className="px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50">←</Link>
+            <span className="px-4 text-sm font-medium text-slate-700 whitespace-nowrap">{monthLabel}</span>
+            <Link href={nav(1)} className="px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50">→</Link>
           </div>
         </div>
       </div>
