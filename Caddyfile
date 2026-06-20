@@ -1,0 +1,6 @@
+# Caddy automatically provisions and renews a Let's Encrypt certificate
+# for {$DOMAIN} and reverse-proxies HTTPS traffic to the app container.
+{$DOMAIN} {
+	encode gzip
+	reverse_proxy app:3000
+}

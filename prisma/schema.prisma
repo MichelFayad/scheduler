@@ -1,0 +1,237 @@
+// Scheduler – Prisma Schema
+// PostgreSQL · Prisma 5
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Admin users
+// ---------------------------------------------------------------------------
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  name         String
+  role         AdminRole @default(ADMIN)
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  createdBookings Booking[] @relation("BookingCreatedBy")
+
+  @@map("admin_users")
+}
+
+// ---------------------------------------------------------------------------
+// Communities
+// ---------------------------------------------------------------------------
+
+model Community {
+  id   String @id @default(cuid())
+  name String
+  slug String @unique // used in URL and emails
+
+  isActive Boolean @default(true) @map("is_active")
+
+  // Self-service window: how many hours before the inspection the user can
+  // still cancel/reschedule on their own (e.g. 24 = until 24 h before)
+  selfServiceWindowHours Int @default(24) @map("self_service_window_hours")
+
+  // Booking windows
+  minAdvanceBookingHours Int @default(24)  @map("min_advance_booking_hours")
+  maxFutureDays          Int @default(60)  @map("max_future_days")
+
+  // Default capacity (max bookings per time slot) for this community.
+  // A schedule rule or date override can still override this per-day/per-slot.
+  defaultMaxPerSlot Int @default(1) @map("default_max_per_slot")
+
+  // Optional reminder email to the user
+  reminderEnabled    Boolean @default(false) @map("reminder_enabled")
+  reminderHoursBefore Int    @default(24)   @map("reminder_hours_before")
+
+  // Email sender identity for this community
+  senderName  String @default("Scheduler") @map("sender_name")
+  replyToEmail String? @map("reply_to_email")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  alertEmails      CommunityAlertEmail[]
+  scheduleRules    ScheduleRule[]
+  dateOverrides    DateOverride[]
+  bookings         Booking[]
+  emailLogs        EmailLog[]
+
+  @@map("communities")
+}
+
+// Static alert distribution list for a community
+model CommunityAlertEmail {
+  id          String    @id @default(cuid())
+  communityId String    @map("community_id")
+  email       String
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@unique([communityId, email])
+  @@map("community_alert_emails")
+}
+
+// ---------------------------------------------------------------------------
+// Availability
+// ---------------------------------------------------------------------------
+
+// Recurring weekly schedule rule for a community
+// e.g. "Every Monday, slots from 09:00–16:00, every 30 min, max 1 booking"
+model ScheduleRule {
+  id          String @id @default(cuid())
+  communityId String @map("community_id")
+
+  // 0 = Sunday, 1 = Monday … 6 = Saturday
+  dayOfWeek Int @map("day_of_week")
+
+  startTime        String @map("start_time") // "09:00"
+  endTime          String @map("end_time")   // "17:00"
+  slotDurationMins Int    @default(60) @map("slot_duration_mins")
+  // null = inherit the community's defaultMaxPerSlot; a value overrides it for this day
+  maxPerSlot       Int?   @map("max_per_slot")
+
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@map("schedule_rules")
+}
+
+// Per-date overrides: block a day, mark it a holiday, or override capacity
+model DateOverride {
+  id          String   @id @default(cuid())
+  communityId String   @map("community_id")
+  date        DateTime @db.Date
+
+  isBlocked Boolean @default(false) @map("is_blocked") // true = no bookings at all
+  reason    String? // "Public holiday", "Staff leave", etc.
+
+  // Optional slot-level overrides on this specific date
+  // Stored as JSON: [{ "time": "09:00", "maxPerSlot": 2 }, ...]
+  slotOverrides Json? @map("slot_overrides")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@unique([communityId, date])
+  @@map("date_overrides")
+}
+
+// ---------------------------------------------------------------------------
+// Bookings
+// ---------------------------------------------------------------------------
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  RESCHEDULED // intermediate state while old slot is freed
+  COMPLETED
+  NO_SHOW
+}
+
+model Booking {
+  id              String @id @default(cuid())
+  referenceNumber String @unique @map("reference_number") // e.g. SCH-2026-00042
+
+  communityId String    @map("community_id")
+  community   Community @relation(fields: [communityId], references: [id])
+
+  // Submitter details
+  firstName   String  @map("first_name")
+  lastName    String  @map("last_name")
+  email       String
+  phone       String?
+  propertyAddress String @map("property_address")
+
+  // Inspection details
+  inspectionDescription String  @map("inspection_description")
+  notes                 String?
+
+  // Scheduled slot
+  scheduledDate DateTime @db.Date    @map("scheduled_date")
+  scheduledTime String               @map("scheduled_time") // "10:00"
+
+  status BookingStatus @default(CONFIRMED)
+
+  // Self-service token (unique per booking, sent in confirmation email)
+  selfServiceToken   String?  @unique @map("self_service_token")
+  tokenExpiresAt     DateTime? @map("token_expires_at")
+
+  // Cancellation / reschedule metadata
+  cancelledAt      DateTime? @map("cancelled_at")
+  cancellationReason String?  @map("cancellation_reason")
+  rescheduledFromId  String?  @map("rescheduled_from_id") // previous booking id
+
+  // Who created this (null = public form, set = admin)
+  createdByAdminId String?    @map("created_by_admin_id")
+  createdByAdmin   AdminUser? @relation("BookingCreatedBy", fields: [createdByAdminId], references: [id])
+
+  reminderSentAt DateTime? @map("reminder_sent_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  emailLogs EmailLog[]
+
+  @@index([communityId, scheduledDate])
+  @@index([selfServiceToken])
+  @@index([email])
+  @@map("bookings")
+}
+
+// ---------------------------------------------------------------------------
+// Email log
+// ---------------------------------------------------------------------------
+
+enum EmailTrigger {
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED_USER
+  BOOKING_CANCELLED_ADMIN
+  BOOKING_RESCHEDULED_USER
+  BOOKING_RESCHEDULED_ADMIN
+  BOOKING_REMINDER
+  MANUAL_COMMUNITY_ALERT
+}
+
+model EmailLog {
+  id          String       @id @default(cuid())
+  bookingId   String?      @map("booking_id")
+  communityId String       @map("community_id")
+  trigger     EmailTrigger
+  recipient   String       // single email address per log row
+  subject     String
+  isError     Boolean      @default(false) @map("is_error")
+  errorMessage String?     @map("error_message")
+  sentAt      DateTime     @default(now()) @map("sent_at")
+
+  booking   Booking?  @relation(fields: [bookingId], references: [id])
+  community Community @relation(fields: [communityId], references: [id])
+
+  @@index([communityId, sentAt])
+  @@index([bookingId])
+  @@map("email_logs")
+}
